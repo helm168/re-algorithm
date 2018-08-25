@@ -1,29 +1,19 @@
 const sort = require('./sort');
+const {
+  arrayIsOrderASC,
+  randomArr,
+} = require('./utils');
 
 const quicksort = sort.qs;
-
-function randomArr(ln, k) {
-  let arr = [];
-  k = k || ln;
-  let loopLn = ln;
-  while(loopLn--) {
-    arr.push(Math.floor(Math.random() * k))
-  }
-  return arr;
-}
-
-function isOrder(arr) {
-  let order = true;
-  for (let i = 1; i < arr.length; i++) {
-    if (arr[i- 1] > arr[i]) {
-      order = false;
-      break;
-    }
-  }
-  return order;
-}
+const mergesort = sort.ms;
 
 test('quick sort algorithm is correct', () => {
   let arr = randomArr(100);
-  expect(isOrder(quicksort(arr))).toBe(true);
+  expect(arrayIsOrderASC(quicksort(arr))).toBe(true);
+});
+
+test('merge sort algorithm is correct', () => {
+  let arr = randomArr(10);
+  //expect(arrayIsOrderASC(mergesort(arr))).toBe(true);
+  expect(true).toBe(true);
 });
