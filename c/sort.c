@@ -116,31 +116,36 @@ int parent(i) {
   return i >> 1;
 }
 
-int leftChild(i) {
+int left(i) {
   return i << 1;
 }
 
-void buildHeap(int* arr, int ln) {
-  int mid = ln >> 1;
-  for(int j = mid; j >= 1; j--) {
-    int l = leftChild(j);
-    int r = MIN(ln, l + 1);
-    int c = l;
-    if (arr[l] < arr[r]) {
-      c = r;
-    }
-    if (arr[c] > arr[j]) {
-      swap(arr, c, j);
-    }
+void maxHeapify(int* arr, int i, int max) {
+  while(i * 2 <= max) {
+    int j = left(i);
+    if (j < max && arr[j] < arr[j+1]) j++;
+    if (arr[i] >= arr[j]) break;
+    swap(arr, i, j);
+    i = j;
   }
 }
 
-void maxHeapify(int* arr, int max) {
-
+void buildMaxHeap(int* arr, int ln) {
+  int mid = ln >> 1;
+  int i = mid;
+  for(int i = mid; i >= 1; i--) {
+    maxHeapify(arr, i, ln);
+  }
 }
 
 void heap_sort(int* arr, int ln) {
-
+  buildMaxHeap(arr, ln);
+  int size = ln;
+  while(size >= 1) {
+    swap(arr, 1, size);
+    size--;
+    maxHeapify(arr, 1, size);
+  }
 }
 
 void do_quick_sort(int *arr, int lo, int hi) {
@@ -169,22 +174,22 @@ void quick_sort(int* arr, int ln) {
   do_quick_sort(arr, 0, ln - 1);
 }
 
-int* randomArr(int ln, int max) {
+int* randomArr(int ln, int max, int from) {
   static int* r;
   r = malloc(ln * sizeof(int));
 
   srand( (unsigned)time( NULL ) );
 
   int i;
-  for(i = 0; i < ln; i++) {
+  for(i = from; i < ln; i++) {
     r[i] = rand() % max;
   }
   return r;
 }
 
-int is_order(int* arr, int ln) {
+int is_order(int* arr, int ln, int from) {
   int i;
-  for (i = 1; i < ln; i++) {
+  for (i = from + 1; i < ln; i++) {
     if (arr[i] < arr[i - 1]) {
       return 0;
     }
@@ -193,20 +198,22 @@ int is_order(int* arr, int ln) {
 }
 
 int main() {
-  int ln = 1000000;
-  int max = 100000;
-  int *arr = randomArr(ln, max);
+  int ln = 5000000;
+  int max = 10000;
+  int from = 1;
+  int *arr = randomArr(ln, max, from);
   // printArr(arr, ln);
-  printf("before sort, is_order: %d\n", is_order(arr, ln));
+  printf("before sort, is_order: %d\n", is_order(arr, ln, from));
   long long start = current_timestamp();
   // select_sort(arr, ln);
   // insert_sort(arr, ln);
   // shell_sort(arr, ln);
+  heap_sort(arr, ln);
   // merge_sort(arr, ln);
-  merge_sort_bu(arr, ln);
-  // quick_sort(arr, ln);
+  // merge_sort_bu(arr, ln);
+  quick_sort(arr, ln);
   // printArr(arr, ln);
   long long end = current_timestamp();
   printf("sort cost: %lld\n", end - start);
-  printf("after sort, is_order: %d\n", is_order(arr, ln));
+  printf("after sort, is_order: %d\n", is_order(arr, ln, from));
 }

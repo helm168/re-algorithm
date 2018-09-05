@@ -165,7 +165,6 @@ describe('delete', () => {
       nodeToDelete.push(node);
     }
   });
-  console.error('nodeToDelete', nodeToDelete.length);
   nodeToDelete.forEach(node => {
     rb.delete(node);
 //    sharedBehaviorForRBTreePropertyViolate(rb);
