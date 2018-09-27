@@ -1,5 +1,6 @@
 const QuickFindUF = require('./QuickFindUF');
 const QuickUnionUF = require('./QuickUnionUF');
+const WeightedQuickUnionUF = require('./WeightedQuickUnionUF');
 
 const tinyUF = [
   10,
@@ -29,6 +30,16 @@ module.exports = {
   },
   createQuickUnionUF() {
     const uf = new QuickUnionUF(tinyUF[0]);
+    for(let i = 1; i < tinyUF.length; i++) {
+      const p = tinyUF[i][0];
+      const q = tinyUF[i][1];
+      if (uf.connected(p, q)) continue;
+      uf.union(p, q);
+    }
+    return uf;
+  },
+  createWeightedQuickUnionUF() {
+    const uf = new WeightedQuickUnionUF(tinyUF[0]);
     for(let i = 1; i < tinyUF.length; i++) {
       const p = tinyUF[i][0];
       const q = tinyUF[i][1];
